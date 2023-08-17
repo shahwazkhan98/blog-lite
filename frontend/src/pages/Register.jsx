@@ -22,12 +22,11 @@ const Register = () => {
     }))
   }
 
-  const API_URL = "/api/user/register"
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      const { data } = await axios.post( API_URL , {
+      const { data } = await axios.post('/api/user/register', {
         username: name,
         email: email,
         password: password
@@ -37,6 +36,7 @@ const Register = () => {
         navigate("/login")
       }
     } catch (error) {
+
       console.log(error)
     }
   }

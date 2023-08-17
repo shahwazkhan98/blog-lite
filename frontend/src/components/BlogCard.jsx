@@ -1,21 +1,45 @@
 import * as React from 'react';
+import axios from 'axios';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardMedia from '@mui/material/CardMedia';
 import CardContent from '@mui/material/CardContent';
-import CardActions from '@mui/material/CardActions';
 import Avatar from '@mui/material/Avatar';
-import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { red } from '@mui/material/colors';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import ShareIcon from '@mui/icons-material/Share';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
+import ModeEditIcon from "@mui/icons-material/ModeEdit";
+import DeleteIcon from '@mui/icons-material/Delete';
+import { Box, IconButton } from '@mui/material';
+import {useNavigate} from 'react-router-dom'
+import { toast } from 'react-toastify';
 
 
+export default function BlogCard({ 
+  title , 
+  description , 
+  image , 
+  username , 
+  time , 
+  id , 
+  isUser
+}) {
 
-export default function BlogCard({title , description , image , username , time}) {
+  const navigate = useNavigate()
+  const handleEdit  = () => {
+    navigate(`/blog-details/${id}`)
+  }
 
+  const handleDelete = async () => {
+    try {
+      const {data} = await axios.delete(`/api/blog/delete-blog/${id}`)
+      if(data?.success){
+        toast.success("Blog Deleted")
+        window.location.reload()
+      }
+    } catch (error) {
+  console.log(error)      
+    }
+  }
   return (
     <Card sx={{ width : "40%" , 
       margin: 'auto',
@@ -25,6 +49,19 @@ export default function BlogCard({title , description , image , username , time}
     ":hover:": {
       boxShadow: "10px 10px 20px #ccc"
     } }}>
+
+      {
+        isUser && (
+          <Box display={'flex'}>
+            <IconButton onClick={handleEdit} sx={ {marginLeft: 'auto'}}>
+              <ModeEditIcon color='info'/>
+            </IconButton>
+            <IconButton onClick={handleDelete}>
+              <DeleteIcon color='error'/>
+            </IconButton>
+          </Box>
+        )
+      }
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
@@ -36,7 +73,7 @@ export default function BlogCard({title , description , image , username , time}
       />
       <CardMedia
         component="img"
-        height="194"
+        height="170"
         image={image}
         alt="Paella dish"
       />

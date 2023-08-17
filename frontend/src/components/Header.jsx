@@ -8,7 +8,8 @@ import { toast } from 'react-toastify'
 const Header = () => {
   
   //GLOBAL STATE
-  const isLogin = useSelector(state => state.isLogin)
+  let isLogin = useSelector(state => state.isLogin)
+  isLogin = isLogin || localStorage.getItem("userId")
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
@@ -20,6 +21,7 @@ const Header = () => {
       dispatch(authActions.logout())
       toast.success("Logout Successfully")
       navigate('/login')
+      localStorage.clear()
     } catch (error) {
       console.log(error)
       

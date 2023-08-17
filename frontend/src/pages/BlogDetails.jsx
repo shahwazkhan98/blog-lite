@@ -1,17 +1,36 @@
-import React, { useState } from 'react'
+import {useState , useEffect} from 'react'
 import axios from 'axios'
+import { useNavigate,useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { useNavigate } from 'react-router-dom'
 import { Box, Button, InputLabel, TextField, Typography } from '@mui/material'
 
-const CreateBlog = () => {
-    const id = localStorage.getItem('userId')
+const BlogDetails = () => {
+    const [blog , setBlog] = useState({})
+    const id = useParams().id
     const navigate = useNavigate()
-    const [inputs , setInputs] = useState({
-        title : "",
-        description : "",
-        image : "",
-    })
+    const [inputs , setInputs] = useState({})
+
+    //get blog details
+    const getBlogDetail = async() => {
+        try {
+            const {data} = await axios.get(`/api/blog/get-blog/${id}`)
+            if(data?.success){
+                setBlog(data?.blog)
+                setInputs({
+                    title : data?.blog.title,
+                    description : data?.blog.description,
+                    image : data?.blog.image,
+                })
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    useEffect(()=>{
+        getBlogDetail()
+    },[id])
+   
 
     const {title , description , image} = inputs
 
@@ -25,9 +44,9 @@ const CreateBlog = () => {
     const handleSubmit = async (e) => {
         e.preventDefault()
        try {
-        const {data} = await axios.post('/api/blog/create-blog' , {title : title, description:description , image : image , user : id}  )
+        const {data} = await axios.put(`/api/blog/update-blog/${id}`,{title : title, description:description , image : image , user : id}  )
         if(data?.success){
-            toast.success("BLog Created")
+            toast.success("BLog Updated")
             navigate('/my-blogs')
         }
     } catch (error) {
@@ -35,8 +54,8 @@ const CreateBlog = () => {
        }
     }
     return (
-    <>  
-      <form>
+    <>
+   <form>
         <Box 
             width={'40%'} 
             border={3} 
@@ -49,33 +68,33 @@ const CreateBlog = () => {
             >
 
             <Typography 
-                variant='h3' 
+                variant='h2' 
                 textAlign={'center'} 
                 fontWeight={'bold'} 
                 padding={3} 
                 color={'gray'}>
                     
-                Create a Blog
+                Update a Post
             </Typography>
             <InputLabel 
-                sx={{ fontSize :'20px', fontWeight : "bold"}}>
+                sx={{ mb : 1, mt : 2, fontSize :'24px', fontWeight : "bold"}}>
                     Title
                 </InputLabel>
                 <TextField value={title} name='title' onChange={handlChange} margin="normal" variant="outlined" required/>
 
                 <InputLabel 
-                sx={{fontSize:'20px',fontWeight:"bold"}}>
+                sx={{mb:1,mt:2,fontSize:'24px',fontWeight:"bold"}}>
                     Desciption
                 </InputLabel>
                 <TextField value={description} name='description' onChange={handlChange} margin="normal" variant="outlined" required/>
 
                 <InputLabel 
-                sx={{fontSize:'20px',fontWeight:"bold"}}>
+                sx={{mb:1,mt:2,fontSize:'24px',fontWeight:"bold"}}>
                     Image URL
                 </InputLabel>
                 <TextField value={image} name='image' onChange={handlChange} margin="normal" variant="outlined" required/>
 
-            <Button onClick={handleSubmit} type='submit' color='primary' variant='contained'>Submit</Button>
+            <Button onClick={handleSubmit} type='submit' color='warning' variant='contained'>Update</Button>
         
         </Box>
       </form>
@@ -83,4 +102,4 @@ const CreateBlog = () => {
   )
 }
 
-export default CreateBlog
+export default BlogDetails

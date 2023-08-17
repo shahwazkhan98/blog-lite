@@ -8,10 +8,11 @@ const UserBlogs = () => {
     //get user blogs
     const getUserBlogs = async () => {
         try {
-            const id = localStorage.getItem('userId')
+            const id = localStorage.getItem("userId")
             const {data} = await axios.get(`/api/blog/user-blog/${id}`)
             if(data?.success){
-                setBlogs(data?.userBlogs.blogs)
+                setBlogs(data?.userBlog.blogs)
+                // console.log(blogs)
             }
         } catch (error) {
             console.log(error)
@@ -20,11 +21,13 @@ const UserBlogs = () => {
     useEffect(()=>{
         getUserBlogs()
     },[])
-    console.log(blogs)
+  // console.log(blogs);
   return (
     <>
       {blogs && blogs.length > 0 ? (blogs.map((blog) => (
-      <BlogCard key={blog._id}
+      <BlogCard 
+      id={blog._id}
+      isUser={true}
       title = {blog.title}
       description = {blog.description}
       image = {blog.image}
@@ -33,7 +36,7 @@ const UserBlogs = () => {
       />))
       )      
       :
-      (<h1>You havent Created a blog</h1>)
+      (<h1>You have not Created a blog</h1>)
       
       }
     </>

@@ -12,7 +12,7 @@ const Login = () => {
 
   const [userData , setUserData] = useState({
     email : "",
-    password : ""
+    password : "",
   })
 
   const {email , password} = userData
@@ -24,22 +24,24 @@ const Login = () => {
     }))
   }
 
-  const API_URL = "/api/user/login"
+  // const API_URL = "/api/user/login"
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      const { data } = await axios.post( API_URL , {
+      const { data } = await axios.post("/api/user/login",{
         email: email,
         password: password
       })
       if (data.success) {
+        localStorage.setItem('userId',data?.user._id)
         dispatch(authActions.login())
-        localStorage.setItem('userId' , data?.user._id)
         toast.success("User Successfully Login")
         navigate("/")
       }
-    } catch (error) {
+    } catch (error) 
+    {      
+      toast.error("Invalid Username or Password")
       console.log(error)
     }
   }
@@ -63,8 +65,10 @@ const Login = () => {
 <Typography 
         variant='h4' 
         sx={{textTransform : "uppercase"}} 
-        padding={3} textAlign={"center"}> 
-        Login
+        padding={3} 
+        textAlign={"center"}
+        > 
+          Login
         </Typography>
 
 <TextField 
