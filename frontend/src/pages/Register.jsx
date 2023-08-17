@@ -98,10 +98,10 @@ const Register = () => {
      
   <Button 
       type='submit'
-      sx={{ borderRadius: 3 ,
-      marginTop : 3}}
+      sx={{ borderRadius: 1 ,
+      marginTop : 3 , backgroundColor:"#577783"}}
       variant='contained'
-      color="primary">
+      >
       Submit
       </Button>
 

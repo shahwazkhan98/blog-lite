@@ -30,7 +30,7 @@ const Header = () => {
 
   return (
     <>
-      <AppBar position='sticky'>
+      <AppBar sx={ {backgroundColor : '#bc382e'}} position='sticky'>
         <Toolbar>
           <Typography variant='h4'>My Blog App </Typography> 
 

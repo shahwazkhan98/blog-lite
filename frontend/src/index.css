@@ -7,4 +7,5 @@
 body
 {
   font-family: 'roboto' , sans-serif;
+  background: url(assets/bg1.png), lightgray 50% ;  
 }
